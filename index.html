@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>imgCompress</title>
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/imgCompress.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="content">
+        <div class="input">
+            <label>
+                <span>最大尺寸/px</span>
+                <input type="number" id="num" value="300"/>
+            </label>
+            <label>
+                <span>清晰度（0-1）</span>
+                <input type="number" id="num1" value="0.5"/>
+            </label>
+            <div class="file">
+                <span>+</span>
+                <input type="file" id="file" onmousedown="selectVal()" accept="image/jpeg,image/png,image/jpg"/>
+                <img id="img"/>
+            </div>
+        </div>
+        <div id="massage">
+            <span>压缩之后的图片</span>
+            <span class="s"></span>
+        </div>
+        <div class="imgBox">
+            <button id="btn" onclick="download()">下载图片</button>
+            <img id="imgShow"/>
+        </div>
+
+    </div>
+    <script>
+        var maxWidth,opacity,imgData;
+        function selectVal() {
+            maxWidth = $('#num').val() || 300;
+            opacity = $('#num1').val() || 0.5;
+            ImgCompress({
+                id:'file', // 上传文件的id
+                // maxWidth:maxWidth,  //限制最大宽度或者高度
+                // opacity:opacity,          //图片转化的清晰度
+                maxWidth:"",  //限制最大宽度或者高度
+                opacity:"",          //图片转化的清晰度
+                success:function(base64){
+                    imgData = base64;
+                    $("#img").attr({'src':base64});
+                    $("#imgShow").attr({'src':base64});
+                    $("#massage").css({'display':"flex"})
+                    $("#btn").css({'display':"block"})
+                }
+            });
+        }
+        function download() {
+            var eleLink = document.createElement('a');
+            eleLink.download = Date.parse( new Date()) + '.jpg';
+            eleLink.style.display = 'none';
+            // 字符内容转变成blob地址
+            eleLink.href = imgData;
+            // 触发点击
+            document.body.appendChild(eleLink);
+            eleLink.click();
+            // 然后移除
+            document.body.removeChild(eleLink);
+        }
+
+
+    </script>
+</body>
+</html>
